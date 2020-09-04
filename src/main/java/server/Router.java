@@ -1,5 +1,6 @@
 package server;
 
+import domain.controllers.UsuarioController;
 import spark.Spark;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 import spark.utils.BooleanHelper;
@@ -23,6 +24,14 @@ public class Router {
     }
 
     private static void configure(){
-
+        UsuarioController usuarioController = new UsuarioController();
+        // Spark.get("/hola", ((request, response) -> "Hola Tomi"));
+        // Spark.get("/hola", ((request, response) -> "Hola " + request.queryParams("nombre")));
+        // Spark.get("/hola/:nombre", ((request, response) -> "Hola " + request.params(("nombre"))));
+        // usuarioController::mostrar funciona como callback
+        // no lo llama en ese momento, solo cuando lo llaman
+        Spark.get("/usuario/:id", usuarioController::mostrar, engine);
+        Spark.get("/saludo", usuarioController::saludar, engine);
+        Spark.get("/usuarios", usuarioController::mostrarTodos, engine);
     }
 }
