@@ -1,6 +1,7 @@
 package domain.entities;
 
 import com.google.common.hash.Hashing;
+import domain.converters.LocalDateAttributeConverter;
 
 import javax.persistence.*;
 import java.nio.charset.StandardCharsets;
@@ -21,7 +22,8 @@ public class Usuario extends EntidadPersistente{
     @Column(name = "contrasenia")
     private String contrasenia;
 
-    @Column(name = "fecha_nacimiento", columnDefinition = "DATE")
+    //@Column(name = "fecha_nacimiento", columnDefinition = "DATE")
+    @Convert(converter = LocalDateAttributeConverter.class)
     private LocalDate fechaDeNacimiento;
 
     @Column(name = "telefono", nullable = true)

@@ -8,6 +8,8 @@ import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,6 +78,7 @@ public class UsuarioController {
     }
 
     public void asignarAtributosA(Usuario usuario, Request request){
+        usuario.setNombreUsuario(request.queryParams("nombreDeUsuario"));
         usuario.setNombre(request.queryParams("nombre"));
         usuario.setApellido(request.queryParams("apellido"));
         usuario.setMail(request.queryParams("email"));
@@ -83,6 +86,14 @@ public class UsuarioController {
         if(request.queryParams("telefono") != null && !request.queryParams("telefono").isEmpty()){
             usuario.setTelefono(new Integer(request.queryParams("telefono")));
         }
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        //convert String to LocalDate
+        String date = request.queryParams("fechaDeNacimiento");
+        System.out.println("date: " + date);
+        LocalDate localDate = LocalDate.parse(date, formatter);
+
+        usuario.setFechaDeNacimiento(localDate);
 
         usuario.setContrasenia(request.queryParams("password"));
     }
