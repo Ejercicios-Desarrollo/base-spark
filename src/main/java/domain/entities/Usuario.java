@@ -68,8 +68,8 @@ public class Usuario extends EntidadPersistente{
         return mail;
     }
 
-    public TipoRol getRol() {
-        return this.rol.getTipoRol();
+    public Rol getRol() {
+        return rol;
     }
 
     public String getContrasenia() {

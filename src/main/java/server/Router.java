@@ -1,6 +1,7 @@
 package server;
 
 import domain.controllers.UsuarioController;
+import domain.controllers.UsuarioRestController;
 import spark.Spark;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 import spark.utils.BooleanHelper;
@@ -25,6 +26,7 @@ public class Router {
 
     private static void configure(){
         UsuarioController usuarioController = new UsuarioController();
+        UsuarioRestController usuarioRestController = new UsuarioRestController();
         // Spark.get("/hola", ((request, response) -> "Hola Tomi"));
         // Spark.get("/hola", ((request, response) -> "Hola " + request.queryParams("nombre")));
         // Spark.get("/hola/:nombre", ((request, response) -> "Hola " + request.params(("nombre"))));
@@ -33,5 +35,14 @@ public class Router {
         Spark.get("/usuario/:id", usuarioController::mostrar, engine);
         Spark.get("/saludo", usuarioController::saludar, engine);
         Spark.get("/usuarios", usuarioController::mostrarTodos, engine);
+        Spark.post("/usuario/:id", usuarioController::modificar);
+        Spark.post("/usuario", usuarioController::guardar);
+        Spark.get("/usuario", usuarioController::crear, engine);
+        Spark.delete("/usuario/:id", usuarioController::eliminar);
+        Spark.get("/api/usuario/:id", usuarioRestController::mostrar);
+
+        Spark.before("/api/*", ((request, response) -> response.type("application/json")));
+        // Spark.after()
+
     }
 }

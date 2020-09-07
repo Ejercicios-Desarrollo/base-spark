@@ -34,10 +34,22 @@ $(document).ready(function(){
   });
 });
 
-function confirmarEliminacion(){
+function confirmarEliminacion(id){
+  document.getElementById("usuarioId").value = id;
   document.getElementById("modalEliminar").style.display = 'block';
 }
 
 function cerrarModal(){
   document.getElementsByClassName("modal")[0].style.display = 'none';
+}
+
+function eliminarUsuario(){
+  let id = document.getElementById("usuarioId").value;
+  $.ajax({
+    type: "delete",
+    url: "usuario/" + id,
+    success: function (resultado){
+      location.reload(true);
+    }
+  });
 }
