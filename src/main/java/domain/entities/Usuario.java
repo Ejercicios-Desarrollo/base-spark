@@ -1,6 +1,7 @@
 package domain.entities;
 
 import com.google.common.hash.Hashing;
+import config.Inyector;
 import domain.converters.LocalDateAttributeConverter;
 
 import javax.persistence.*;
@@ -107,6 +108,6 @@ public class Usuario extends EntidadPersistente{
     }
 
     public void setContrasenia(String contrasenia) {
-        this.contrasenia = Hashing.sha256().hashString(contrasenia, StandardCharsets.UTF_8).toString();
+        this.contrasenia = Inyector.getInstance().estrategiaDeHashing().generarHash(contrasenia);
     }
 }

@@ -1,10 +1,13 @@
 package server;
 
+import domain.controllers.LoginController;
 import domain.controllers.UsuarioController;
 import domain.controllers.UsuarioRestController;
+import domain.middlewares.AuthMiddleware;
 import spark.Spark;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 import spark.utils.BooleanHelper;
+import spark.utils.EqualsHelper;
 import spark.utils.HandlebarsTemplateEngineBuilder;
 
 public class Router {
@@ -15,6 +18,7 @@ public class Router {
                 .create()
                 .withDefaultHelpers()
                 .withHelper("isTrue", BooleanHelper.isTrue)
+                .withHelper("equals", new EqualsHelper())
                 .build();
     }
 
@@ -24,25 +28,37 @@ public class Router {
         Router.configure();
     }
 
-    private static void configure(){
+    private static void configure() {
         UsuarioController usuarioController = new UsuarioController();
         UsuarioRestController usuarioRestController = new UsuarioRestController();
-        // Spark.get("/hola", ((request, response) -> "Hola Tomi"));
-        // Spark.get("/hola", ((request, response) -> "Hola " + request.queryParams("nombre")));
-        // Spark.get("/hola/:nombre", ((request, response) -> "Hola " + request.params(("nombre"))));
-        // usuarioController::mostrar funciona como callback
-        // no lo llama en ese momento, solo cuando lo llaman
+        LoginController loginController = new LoginController();
+
+        Spark.before("/", AuthMiddleware::redirigirSiHaySesion);
+
+        Spark.get("/", loginController::inicio, engine);
+
+        // Spark.before("/*", AuthMiddleware::redirigirSiNoHaySesion); cuidado con /login y /logout
+        // llamar a middleware para validar sesion
+
+        Spark.post("/login", loginController::login);
+
+        Spark.get("/logout", loginController::logout);
+
         Spark.get("/usuario/:id", usuarioController::mostrar, engine);
-        Spark.get("/saludo", usuarioController::saludar, engine);
+
         Spark.get("/usuarios", usuarioController::mostrarTodos, engine);
+
         Spark.post("/usuario/:id", usuarioController::modificar);
+
         Spark.post("/usuario", usuarioController::guardar);
+
         Spark.get("/usuario", usuarioController::crear, engine);
+
         Spark.delete("/usuario/:id", usuarioController::eliminar);
+
         Spark.get("/api/usuario/:id", usuarioRestController::mostrar);
 
-        Spark.before("/api/*", ((request, response) -> response.type("application/json")));
         // Spark.after()
-
+        Spark.before("/api/*", ((request, response) -> response.type("application/json")));
     }
 }

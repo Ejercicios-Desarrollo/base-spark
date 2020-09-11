@@ -7,8 +7,8 @@ import java.util.List;
 @Entity
 @Table(name = "rol")
 public class Rol extends  EntidadPersistente{
-    @Enumerated(EnumType.STRING)
-    private TipoRol tipoRol;
+    @Column(name = "tipoRol")
+    private String tipoRol;
 
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Permiso> permisos;
@@ -17,13 +17,12 @@ public class Rol extends  EntidadPersistente{
         this.permisos = new ArrayList<>();
     }
 
-    public Rol(TipoRol tipoRol) {
-        this.tipoRol = tipoRol;
-        this.permisos = new ArrayList<>();
+    public String getTipoRol() {
+        return tipoRol;
     }
 
-    public TipoRol getTipoRol() {
-        return tipoRol;
+    public void setTipoRol(String tipoRol) {
+        this.tipoRol = tipoRol;
     }
 
     public List<Permiso> getPermisos() {

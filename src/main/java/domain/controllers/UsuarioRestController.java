@@ -15,7 +15,7 @@ public class UsuarioRestController {
         this.repoUsuarios = repoUsuarios = new Repositorio<>(new DAOHibernate<>(Usuario.class));
     }
 
-    public String mostrar(Request request, Response response){
+    public String mostrar(Request request, Response response) {
         Usuario usuario = this.repoUsuarios.buscar(new Integer(request.params("id")));
         Gson gson = new Gson();
         String jsonUsuario = gson.toJson(new UsuarioDto(usuario));
